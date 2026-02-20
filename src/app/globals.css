@@ -1,0 +1,396 @@
+@import "tailwindcss";
+
+/* ============================================
+   AthletEcho — Sporty Theme (Dark Default)
+   ============================================ */
+
+:root {
+  /* Core Dark Palette */
+  --background: #0a0a0f;
+  --background-alt: #0f0f18;
+  --foreground: #f0f0f0;
+  --surface: #13131e;
+  --surface-elevated: #1a1a2a;
+  --surface-hover: #212135;
+  --border: #2a2a40;
+  --border-bright: #3a3a58;
+
+  /* Primary — Electric Orange */
+  --primary: #ff5500;
+  --primary-hover: #ff7733;
+  --primary-light: #1f0e00;
+  --primary-dark: #cc4400;
+  --primary-glow: rgba(255, 85, 0, 0.35);
+
+  /* Secondary — Electric Blue */
+  --secondary: #0066ff;
+  --secondary-hover: #3388ff;
+  --secondary-light: #00113d;
+  --secondary-dark: #0050cc;
+
+  /* Accents */
+  --accent-gold: #ffd700;
+  --accent-teal: #00d4aa;
+
+  /* Semantic */
+  --success: #00c97a;
+  --success-light: #002a1a;
+  --warning: #ffb300;
+  --warning-light: #1f1400;
+  --error: #ff4444;
+  --error-light: #2a0000;
+
+  /* Text */
+  --text-primary: #f0f0f0;
+  --text-secondary: #a0a0b8;
+  --text-muted: #5a5a78;
+
+  /* Footer */
+  --footer-bg: #07070f;
+  --footer-text: #c0c0d8;
+  --footer-border: #1e1e30;
+
+  /* Gradients */
+  --gradient-primary: linear-gradient(135deg, #ff5500 0%, #ff8000 100%);
+  --gradient-hero: linear-gradient(135deg, #ff5500 0%, #cc0055 100%);
+  --gradient-dark: linear-gradient(180deg, #13131e 0%, #0a0a0f 100%);
+  --gradient-card: linear-gradient(135deg, #1a1a2a 0%, #13131e 100%);
+
+  /* Radius & Shadow */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 40px -4px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 20px var(--primary-glow);
+  --shadow-glow-sm: 0 0 10px var(--primary-glow);
+}
+
+/* ============================================
+   Light Theme Overrides
+   Applied when <html class="light">
+   ============================================ */
+html.light {
+  --background: #f4f4f8;
+  --background-alt: #ffffff;
+  --foreground: #0f0f18;
+  --surface: #ffffff;
+  --surface-elevated: #f0f0f8;
+  --surface-hover: #e8e8f4;
+  --border: #d8d8e8;
+  --border-bright: #b8b8d0;
+
+  /* Primary stays orange */
+  --primary: #ff5500;
+  --primary-hover: #e04a00;
+  --primary-light: #fff0ea;
+  --primary-dark: #cc4400;
+  --primary-glow: rgba(255, 85, 0, 0.2);
+
+  /* Secondary stays blue */
+  --secondary: #0066ff;
+  --secondary-hover: #0055dd;
+  --secondary-light: #e6f0ff;
+  --secondary-dark: #0050cc;
+
+  /* Semantic */
+  --success: #00a85a;
+  --success-light: #e6f9f0;
+  --warning: #e69500;
+  --warning-light: #fff8e6;
+  --error: #e02020;
+  --error-light: #ffeaea;
+
+  /* Text */
+  --text-primary: #0f0f18;
+  --text-secondary: #3a3a5a;
+  --text-muted: #8888aa;
+
+  /* Footer */
+  --footer-bg: #1a1a2a;
+  --footer-text: #c0c0d8;
+  --footer-border: #2a2a40;
+
+  /* Shadows lighter */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.15);
+  --shadow-lg: 0 10px 40px -4px rgba(0, 0, 0, 0.18);
+}
+
+/* Tailwind Theme Mapping */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-secondary: var(--secondary);
+  --color-secondary-hover: var(--secondary-hover);
+  --color-secondary-light: var(--secondary-light);
+  --color-secondary-dark: var(--secondary-dark);
+  --color-success: var(--success);
+  --color-success-light: var(--success-light);
+  --color-warning: var(--warning);
+  --color-warning-light: var(--warning-light);
+  --color-error: var(--error);
+  --color-error-light: var(--error-light);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
+  --font-display: var(--font-barlow-condensed), 'Barlow Condensed', sans-serif;
+}
+
+/* ============================
+   Base
+   ============================ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-barlow-condensed), 'Barlow Condensed', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+/* ============================
+   Sport Utility Classes
+   ============================ */
+
+/* Glowing orange accent */
+.sport-glow {
+  box-shadow: var(--shadow-glow);
+}
+
+.sport-glow-sm {
+  box-shadow: var(--shadow-glow-sm);
+}
+
+/* Orange left-border sport card */
+.sport-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-lg);
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.sport-card:hover {
+  border-color: var(--primary-hover);
+  box-shadow: var(--shadow-glow-sm);
+}
+
+/* Grid texture background */
+.sport-grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 85, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 85, 0, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Diagonal stripe accent */
+.sport-stripe::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+}
+
+/* Input dark style */
+.sport-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  color: var(--text-primary);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+  outline: none;
+}
+
+.sport-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 85, 0, 0.2);
+}
+
+.sport-input::placeholder {
+  color: var(--text-muted);
+}
+
+/* CTA Buttons */
+.btn-sport {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  background: var(--gradient-primary);
+  color: #fff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.2s, filter 0.2s;
+  box-shadow: 0 4px 14px rgba(255, 85, 0, 0.4);
+}
+
+.btn-sport:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 85, 0, 0.55);
+  filter: brightness(1.08);
+}
+
+.btn-sport:active {
+  transform: translateY(0);
+}
+
+/* Ghost button */
+.btn-sport-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.5rem;
+  background: transparent;
+  color: var(--primary);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-sport-ghost:hover {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(255, 85, 0, 0.4);
+}
+
+/* Navigation active indicator */
+.nav-active {
+  color: var(--primary) !important;
+  position: relative;
+}
+
+.nav-active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  border-radius: 9999px;
+}
+
+/* Stat number */
+.stat-number {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 2rem;
+  color: var(--primary);
+  line-height: 1;
+}
+
+/* Tag / badge */
+.sport-badge {
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-family: 'Barlow Condensed', sans-serif;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-bright);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Theme utility classes (kept for backward compat) */
+.bg-theme-primary {
+  background-color: var(--primary);
+}
+
+.bg-theme-primary-light {
+  background-color: var(--primary-light);
+}
+
+.bg-theme-secondary {
+  background-color: var(--secondary);
+}
+
+.bg-theme-surface {
+  background-color: var(--surface);
+}
+
+.bg-theme-surface-elevated {
+  background-color: var(--surface-elevated);
+}
+
+.text-theme-primary {
+  color: var(--primary);
+}
+
+.text-theme-secondary {
+  color: var(--secondary);
+}
+
+.text-theme-muted {
+  color: var(--text-muted);
+}
+
+.border-theme {
+  border-color: var(--border);
+}
+
+.border-theme-primary {
+  border-color: var(--primary);
+}
