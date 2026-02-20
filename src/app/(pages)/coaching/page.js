@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 
@@ -7,25 +8,25 @@ export default function Coaching() {
       name: "Ravi Menon",
       sport: "Badminton",
       experience: "10+ years coaching national players.",
-      image: "/assests/coach-badminton.jpg",
+      image: "/assests/batminton.jpg",
     },
     {
       name: "Priya Sharma",
       sport: "Cricket",
       experience: "Ex-Ranji player, specializes in youth development.",
-      image: "/assests/coach-cricket.jpg",
+      image: "/assests/cricket.jpg",
     },
     {
       name: "Anil Verma",
       sport: "Volleyball",
       experience: "Former national coach with 15 years experience.",
-      image: "/assests/coach-volleyball.jpg",
+      image: "/assests/volley ball.jpeg",
     },
     {
       name: "Aryan Singh",
       sport: "eSports (CS:GO & GTA)",
       experience: "Professional gamer and team strategist with 8+ years in eSports.",
-      image: "/assests/coach-esports.jpg",
+      image: "/assests/article_image.jpeg",
     },
   ];
 
@@ -67,7 +68,7 @@ export default function Coaching() {
     },
     {
       title: "E-SPORTS ARENA",
-      image: "/assests/esports.jpg", // Add a relevant gaming image here
+      image: "/assests/article_image.jpeg", // Add a relevant gaming image here
       features: [
         "Dedicated high-end gaming PCs and streaming setups.",
         "Weekly tournaments for CS:GO, Valorant, and GTA RP.",
@@ -88,12 +89,19 @@ export default function Coaching() {
         {sections.map((section, idx) => (
           <section
             key={idx}
-            className="relative h-screen bg-cover bg-center flex items-center"
-            style={{
-              backgroundImage: `linear-gradient(to right, rgba(0,0,0,0.6), rgba(0,0,0,0.4)), url('${section.image}')`,
-            }}
+            className="relative h-screen flex items-center overflow-hidden"
           >
-            <div className={`p-8 text-white w-full ${section.alignment}`}>
+            <Image
+              src={section.image}
+              alt={section.title}
+              fill
+              className="object-cover"
+              priority={idx === 0}
+            />
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black/50" />
+
+            <div className={`relative z-10 p-8 text-white w-full ${section.alignment}`}>
               <div className="max-w-2xl">
                 <h2 className="text-4xl font-bold mb-4">{section.title}</h2>
                 <ul className="list-disc pl-6 space-y-2 text-lg">
@@ -117,11 +125,14 @@ export default function Coaching() {
                 key={i}
                 className="bg-[var(--surface)] rounded-2xl shadow-lg overflow-hidden transition hover:shadow-2xl border border-[var(--border)]"
               >
-                <img
-                  src={coach.image}
-                  alt={`${coach.name}`}
-                  className="w-full h-64 object-cover"
-                />
+                <div className="relative w-full h-64">
+                  <Image
+                    src={coach.image}
+                    alt={coach.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
                 <div className="p-5">
                   <h3 className="text-xl font-semibold text-[var(--text-primary)]">{coach.name}</h3>
                   <p className="text-[var(--primary)] font-medium">{coach.sport}</p>

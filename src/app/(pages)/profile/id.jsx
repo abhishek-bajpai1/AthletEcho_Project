@@ -2,6 +2,7 @@
 
 import { storage } from "@/lib/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -90,7 +91,7 @@ export default function ProfilePage() {
       alert("Firebase Storage is not configured");
       return;
     }
-    
+
     const file = e.target.files[0];
     if (!file) return;
 
@@ -121,11 +122,14 @@ export default function ProfilePage() {
       </div>
 
       <div className="flex items-center space-x-6 mb-6">
-        <img
-          src={form.profilePicUrl || "/default-avatar.png"}
-          alt="Profile Picture"
-          className="w-32 h-32 rounded-full object-cover border-4 border-[var(--primary)]"
-        />
+        <div className="relative w-32 h-32">
+          <Image
+            src={form.profilePicUrl || "/default-avatar.png"}
+            alt="Profile Picture"
+            fill
+            className="rounded-full object-cover border-4 border-[var(--primary)]"
+          />
+        </div>
         {editMode && (
           <input type="file" accept="image/*" onChange={handleFileChange} />
         )}

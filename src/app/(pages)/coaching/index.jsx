@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 
@@ -18,10 +19,17 @@ export default function Coaching() {
 
 
       <section
-        className="relative h-screen bg-no-repeat bg-cover bg-center flex flex-col px-4 lg:pl-9"
-        style={{ backgroundImage: "url('/assests/batminton.jpg')" }}
+        className="relative h-screen flex flex-col items-center justify-center overflow-hidden"
       >
-        <div className="flex justify-end p-7 bg-black bg-opacity-40 rounded-xl max-w-md ml-auto">
+        <Image
+          src="/assests/batminton.jpg"
+          alt="Badminton"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="relative z-10 p-7 bg-black bg-opacity-40 rounded-xl max-w-md ml-auto lg:mr-9">
           <div>
             <h2 className="text-3xl text-white font-bold mb-4">BADMINTON</h2>
             <ul className="list-disc list-inside text-white space-y-2 text-md">
@@ -50,11 +58,14 @@ export default function Coaching() {
           whileHover={{ scale: 1.05 }}
           className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden max-w-sm mx-auto"
         >
-          <img
-            src={esportsCoach.image}
-            alt={esportsCoach.name}
-            className="w-full h-60 object-cover"
-          />
+          <div className="relative w-full h-60">
+            <Image
+              src={esportsCoach.image}
+              alt={esportsCoach.name}
+              fill
+              className="object-cover"
+            />
+          </div>
           <div className="p-6">
             <h3 className="text-2xl font-bold mb-1">{esportsCoach.name}</h3>
             <p className="text-green-400 font-semibold mb-3">{esportsCoach.role}</p>

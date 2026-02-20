@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo, Suspense, useCallback } from "react";
+import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
@@ -163,8 +164,6 @@ function MessagesContent() {
     });
   }, [conversations, users, user?.uid, search]);
 
-  const activeConv = useMemo(() => conversations.find((c) => c.id === activeConvId), [conversations, activeConvId]);
-
   const otherUser = useMemo(() => {
     if (!activeConvId || !user?.uid) return null;
     const otherUid = activeConvId.split("_").find((id) => id !== user.uid);
@@ -229,8 +228,8 @@ function MessagesContent() {
                         disabled={isOpeningChat}
                         className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--surface-elevated)] transition-colors text-left disabled:opacity-50">
                         {u.photoURL ? (
-                          <img src={u.photoURL} alt={u.displayName}
-                            className="w-9 h-9 rounded-full border border-[var(--primary)] object-cover" />
+                          <Image src={u.photoURL} alt={u.displayName || "User"} width={36} height={36}
+                            className="rounded-full border border-[var(--primary)] object-cover" />
                         ) : (
                           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white font-bold">
                             {u.displayName?.[0] || "?"}
@@ -283,8 +282,8 @@ function MessagesContent() {
                           }`}>
                         <div className="relative flex-shrink-0">
                           {conv.other?.photoURL ? (
-                            <img src={conv.other.photoURL} alt={conv.other.displayName}
-                              className={`w-11 h-11 rounded-full object-cover border-2 ${isActive ? "border-[var(--primary)]" : "border-[var(--border)]"}`} />
+                            <Image src={conv.other.photoURL} alt={conv.other.displayName || "User"} width={44} height={44}
+                              className={`rounded-full object-cover border-2 ${isActive ? "border-[var(--primary)]" : "border-[var(--border)]"}`} />
                           ) : (
                             <div className={`w-11 h-11 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white font-bold border-2 ${isActive ? "border-[var(--primary)]" : "border-[var(--border)]"}`}>
                               {conv.other?.displayName?.[0] || "?"}
@@ -322,8 +321,8 @@ function MessagesContent() {
                   <div className="flex items-center gap-3">
                     <div className="relative">
                       {otherUser?.photoURL ? (
-                        <img src={otherUser.photoURL} alt={otherUser.displayName}
-                          className="w-10 h-10 rounded-full border-2 border-[var(--primary)] object-cover" />
+                        <Image src={otherUser.photoURL} alt={otherUser.displayName || "User"} width={40} height={40}
+                          className="rounded-full border-2 border-[var(--primary)] object-cover" />
                       ) : (
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white font-bold border-2 border-[var(--primary)]">
                           {otherUser?.displayName?.[0] || "?"}
@@ -375,7 +374,7 @@ function MessagesContent() {
                         className={`flex items-end gap-2.5 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
                         {!isMe && (
                           otherUser?.photoURL ? (
-                            <img src={otherUser.photoURL} alt="" className="w-8 h-8 rounded-full border border-[var(--primary)] flex-shrink-0 self-end object-cover" />
+                            <Image src={otherUser.photoURL} alt="" width={32} height={32} className="rounded-full border border-[var(--primary)] flex-shrink-0 self-end object-cover" />
                           ) : (
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 self-end">
                               {otherUser?.displayName?.[0] || "?"}

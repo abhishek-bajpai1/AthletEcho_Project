@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
@@ -37,8 +38,9 @@ function PersonCard({ person, status, onConnect, onAccept, onIgnore, onRemove, o
       {/* Avatar */}
       <div className="relative flex-shrink-0">
         {person.photoURL ? (
-          <img src={person.photoURL} alt={person.displayName}
-            className="w-14 h-14 rounded-full border-2 border-[var(--primary)] object-cover" />
+          <Image src={person.photoURL} alt={person.displayName || "Athlete"}
+            width={56} height={56}
+            className="rounded-full border-2 border-[var(--primary)] object-cover" />
         ) : (
           <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white text-xl font-bold border-2 border-[var(--primary)]"
             style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>

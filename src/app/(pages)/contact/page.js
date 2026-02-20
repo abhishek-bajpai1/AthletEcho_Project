@@ -7,14 +7,15 @@ import Footer from "../../components/footer";
 export default function Contact() {
   return (
     <>
-      <div className="relative h-screen bg-no-repeat bg-cover bg-center overflow-hidden flex flex-col px-4 lg:pl-9">
+      <div className="relative h-screen overflow-hidden flex flex-col items-center justify-center">
         <Image
           src="/assests/sports-tools.jpg"
           alt="Background"
-          className="absolute inset-0 w-full h-full object-cover opacity-80"
-          width={500}
-          height={300}
+          fill
+          className="object-cover opacity-80"
+          priority
         />
+        <div className="absolute inset-0 bg-black/40" />
         <Header />
 
         <div className="flex justify-center items-center z-0 opacity-90">

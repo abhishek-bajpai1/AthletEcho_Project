@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { subscribeToUsers } from "@/lib/chat";
@@ -150,16 +151,15 @@ export default function Header() {
 
           {/* ── Logo: SVG only, no duplicate text ── */}
           <Link href="/" className="flex-shrink-0 flex items-center gap-2 group">
-            <img
-              src="/logo_ath.svg"
-              alt="AthletEcho"
-              className="h-8 md:h-9 transition-all group-hover:drop-shadow-[0_0_8px_rgba(255,85,0,0.7)]"
-              onError={(e) => {
-                // Fallback text logo if SVG fails to load
-                e.currentTarget.style.display = "none";
-                e.currentTarget.nextElementSibling.style.display = "block";
-              }}
-            />
+            <div className="relative h-8 md:h-9 w-32">
+              <Image
+                src="/logo_ath.svg"
+                alt="AthletEcho"
+                fill
+                className="object-contain transition-all group-hover:drop-shadow-[0_0_8px_rgba(255,85,0,0.7)]"
+                priority
+              />
+            </div>
             {/* Fallback text — hidden by default, shown if SVG 404s */}
             <span
               style={{ fontFamily: "'Barlow Condensed', sans-serif", display: "none" }}
@@ -200,8 +200,8 @@ export default function Header() {
                       className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[var(--surface)] transition-colors text-left"
                     >
                       {u.photoURL ? (
-                        <img src={u.photoURL} alt={u.displayName}
-                          className="w-8 h-8 rounded-full border border-[var(--primary)] object-cover flex-shrink-0" />
+                        <Image src={u.photoURL} alt={u.displayName} width={32} height={32}
+                          className="rounded-full border border-[var(--primary)] object-cover flex-shrink-0" />
                       ) : (
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
                           {u.displayName?.[0] || "?"}
@@ -245,11 +245,13 @@ export default function Header() {
             </button>
             {user ? (
               <div className="relative hidden md:block" ref={profileRef}>
-                <button onClick={toggleProfile} aria-label="Profile menu" className="relative">
-                  <img
+                <button onClick={toggleProfile} aria-label="Profile menu" className="relative group">
+                  <Image
                     src={user.photoURL || "/avatar.png"}
                     alt={user.displayName || "Profile"}
-                    className="w-9 h-9 rounded-full border-2 border-[var(--primary)] hover:shadow-[0_0_12px_rgba(255,85,0,0.6)] transition-all"
+                    width={36}
+                    height={36}
+                    className="rounded-full border-2 border-[var(--primary)] group-hover:shadow-[0_0_12px_rgba(255,85,0,0.6)] transition-all object-cover"
                   />
                   <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-[var(--success)] border-2 border-[var(--background)] rounded-full" />
                 </button>
@@ -316,7 +318,7 @@ export default function Header() {
                       <button key={u.uid} onClick={() => { handleSearchNavigate(u.uid); closeMenu(); }}
                         className="w-full flex items-center gap-3 px-3 py-2 hover:bg-[var(--surface)] text-left">
                         {u.photoURL ? (
-                          <img src={u.photoURL} alt={u.displayName} className="w-7 h-7 rounded-full border border-[var(--primary)] object-cover" />
+                          <Image src={u.photoURL} alt={u.displayName} width={28} height={28} className="rounded-full border border-[var(--primary)] object-cover" />
                         ) : (
                           <div className="w-7 h-7 rounded-full bg-[var(--primary)] flex items-center justify-center text-white text-xs font-bold">
                             {u.displayName?.[0] || "?"}
@@ -339,8 +341,8 @@ export default function Header() {
               {user ? (
                 <div className="border-t border-[var(--border)] mt-2 pt-3 space-y-1">
                   <div className="flex items-center gap-3 px-4 py-2">
-                    <img src={user.photoURL || "/avatar.png"} alt="Profile"
-                      className="w-10 h-10 rounded-full border-2 border-[var(--primary)]" />
+                    <Image src={user.photoURL || "/avatar.png"} alt="Profile"
+                      width={40} height={40} className="rounded-full border-2 border-[var(--primary)] object-cover" />
                     <div>
                       <p className="text-sm font-semibold text-[var(--text-primary)] truncate">{user.displayName || user.email}</p>
                       <p className="text-xs text-[var(--text-muted)]">{user.email}</p>

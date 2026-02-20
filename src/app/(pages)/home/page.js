@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -73,7 +74,7 @@ function CommentSection({ postId, user }) {
       {/* Input */}
       <div className="flex gap-2 items-center">
         {user.photoURL ? (
-          <img src={user.photoURL} className="w-8 h-8 rounded-full border border-[var(--primary)] flex-shrink-0 object-cover" alt="" />
+          <Image src={user.photoURL} width={32} height={32} className="rounded-full border border-[var(--primary)] flex-shrink-0 object-cover" alt="" />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
             {user.displayName?.[0] || "?"}
@@ -98,7 +99,7 @@ function CommentSection({ postId, user }) {
           <motion.div key={c.id} initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }}
             className="flex gap-2 items-start">
             {c.authorPhoto ? (
-              <img src={c.authorPhoto} className="w-7 h-7 rounded-full border border-[var(--border)] flex-shrink-0 object-cover" alt="" />
+              <Image src={c.authorPhoto} width={28} height={28} className="rounded-full border border-[var(--border)] flex-shrink-0 object-cover" alt="" />
             ) : (
               <div className="w-7 h-7 rounded-full bg-[var(--surface-elevated)] flex items-center justify-center text-[var(--primary)] text-xs font-bold flex-shrink-0 border border-[var(--border)]">
                 {c.authorName?.[0] || "?"}
@@ -137,7 +138,7 @@ function PostCard({ post, user }) {
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           {post.authorPhoto ? (
-            <img src={post.authorPhoto} className="w-11 h-11 rounded-full border-2 border-[var(--primary)] object-cover" alt="" />
+            <Image src={post.authorPhoto} width={44} height={44} className="rounded-full border-2 border-[var(--primary)] object-cover" alt="" />
           ) : (
             <div className="w-11 h-11 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white font-bold text-lg border-2 border-[var(--primary)]"
               style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
@@ -183,7 +184,9 @@ function PostCard({ post, user }) {
 
       {/* Image */}
       {post.imageUrl && (
-        <img src={post.imageUrl} className="w-full rounded-xl mb-3 max-h-80 object-cover" alt="Post" />
+        <div className="relative w-full h-80 mb-3">
+          <Image src={post.imageUrl} fill className="rounded-xl object-cover" alt="Post" />
+        </div>
       )}
 
       {/* Stats row */}
@@ -282,7 +285,7 @@ function CreatePostBox({ user, sport }) {
     <div className="sport-card p-4">
       <div className="flex gap-3 items-start">
         {user.photoURL ? (
-          <img src={user.photoURL} className="w-10 h-10 rounded-full border-2 border-[var(--primary)] flex-shrink-0 object-cover" alt="" />
+          <Image src={user.photoURL} width={40} height={40} className="rounded-full border-2 border-[var(--primary)] flex-shrink-0 object-cover" alt="" />
         ) : (
           <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white font-bold border-2 border-[var(--primary)] flex-shrink-0">
             {user.displayName?.[0] || "?"}
@@ -295,8 +298,8 @@ function CreatePostBox({ user, sport }) {
             rows={3} />
 
           {preview && (
-            <div className="relative mt-2">
-              <img src={preview} className="w-full rounded-lg max-h-48 object-cover" alt="Preview" />
+            <div className="relative mt-2 w-full h-48">
+              <Image src={preview} fill className="rounded-lg object-cover" alt="Preview" unoptimized />
               <button onClick={() => { setImageFile(null); setPreview(null); }}
                 className="absolute top-2 right-2 w-6 h-6 bg-black/60 rounded-full text-white text-xs flex items-center justify-center hover:bg-[var(--error)] transition-colors">
                 ✕
@@ -381,7 +384,7 @@ export default function SportFeed() {
                 <div className="h-14 bg-gradient-to-r from-[var(--primary)] to-[var(--primary-dark)]" />
                 <div className="px-4 pb-4 -mt-7">
                   {user?.photoURL ? (
-                    <img src={user.photoURL} alt="" className="w-14 h-14 rounded-full border-3 border-[var(--surface)] border-2 shadow-lg" />
+                    <Image src={user.photoURL} width={56} height={56} alt="" className="rounded-full border-3 border-[var(--surface)] border-2 shadow-lg object-cover" />
                   ) : (
                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white font-bold text-xl border-2 border-[var(--surface)] shadow-lg"
                       style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
@@ -474,7 +477,7 @@ export default function SportFeed() {
                     {suggestedUsers.map(u => (
                       <div key={u.uid} className="flex items-center gap-2.5">
                         {u.photoURL ? (
-                          <img src={u.photoURL} alt={u.displayName} className="w-9 h-9 rounded-full border border-[var(--primary)] object-cover flex-shrink-0" />
+                          <Image src={u.photoURL} alt={u.displayName} width={36} height={36} className="rounded-full border border-[var(--primary)] object-cover flex-shrink-0" />
                         ) : (
                           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white text-sm font-bold flex-shrink-0">
                             {u.displayName?.[0] || "?"}

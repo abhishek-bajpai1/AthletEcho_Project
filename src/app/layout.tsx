@@ -28,6 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="dark">
       <body
+        suppressHydrationWarning
         className={`${barlowCondensed.variable} ${inter.variable} antialiased bg-[var(--background)] text-[var(--foreground)]`}
       >
         <AuthProvider>{children}</AuthProvider>

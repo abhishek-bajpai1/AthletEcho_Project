@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Footer from "../../components/footer";
 import Link from "next/link";
+import Image from "next/image";
 import { HiLightningBolt } from "react-icons/hi";
 import { FcGoogle } from "react-icons/fc";
 
@@ -25,13 +26,16 @@ export default function Signup() {
   return (
     <>
       <main
-        className="relative min-h-screen bg-cover bg-center flex flex-col items-center justify-center px-6 py-14"
-        style={{
-          backgroundImage:
-            "url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1950&q=80')",
-        }}
+        className="relative min-h-screen flex flex-col items-center justify-center px-6 py-14"
         aria-label="Sign Up page"
       >
+        <Image
+          src="https://images.unsplash.com/photo-1574629810360-7efbbe195018?auto=format&fit=crop&w=1950&q=80"
+          alt="Background"
+          fill
+          className="object-cover"
+          priority
+        />
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-[#0a0a0f]/80 backdrop-blur-sm" />
 
