@@ -83,6 +83,16 @@ function MessagesContent() {
     return map;
   }, [myConns]);
 
+  // ── Open or create conversation with a user ──────────────────────────────
+  const openConversation = useCallback(async (otherUid) => {
+    if (!user?.uid) return;
+    const convId = await getOrCreateConversation(user.uid, otherUid);
+    setActiveConvId(convId);
+    setShowNewChat(false);
+    setUserSearch("");
+    setTimeout(() => inputRef.current?.focus(), 100);
+  }, [user?.uid]);
+
   // ── Handle Auto-opening chat from URL ──
   useEffect(() => {
     const uidFromUrl = searchParams.get("uid");
@@ -109,16 +119,6 @@ function MessagesContent() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
-  // ── Open or create conversation with a user ──────────────────────────────
-  const openConversation = useCallback(async (otherUid) => {
-    if (!user?.uid) return;
-    const convId = await getOrCreateConversation(user.uid, otherUid);
-    setActiveConvId(convId);
-    setShowNewChat(false);
-    setUserSearch("");
-    setTimeout(() => inputRef.current?.focus(), 100);
-  }, [user?.uid]);
 
   // ── Send ─────────────────────────────────────────────────────────────────
   const handleSend = async () => {
