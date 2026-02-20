@@ -69,19 +69,33 @@ export function subscribeToUsers(currentUid, callback) {
 
 /** Get or create a conversation between two users */
 export async function getOrCreateConversation(uid1, uid2) {
-    if (!db) return null;
-    const convId = [uid1, uid2].sort().join("_");
-    const ref = doc(db, "conversations", convId);
-    const snap = await getDoc(ref);
-    if (!snap.exists()) {
-        await setDoc(ref, {
-            participants: [uid1, uid2],
-            lastMessage: "",
-            lastTime: serverTimestamp(),
-            createdAt: serverTimestamp(),
-        });
+    if (!db) {
+        console.error("Firestore DB not initialized");
+        return null;
     }
-    return convId;
+    try {
+        const convId = [uid1, uid2].sort().join("_");
+        console.log("Checking conversation document:", convId);
+        const ref = doc(db, "conversations", convId);
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) {
+            console.log("Creating new conversation:", convId);
+            await setDoc(ref, {
+                participants: [uid1, uid2],
+                lastMessage: "",
+                lastTime: serverTimestamp(),
+                createdAt: serverTimestamp(),
+            });
+            console.log("New conversation created successfully");
+        }
+        return convId;
+    } catch (error) {
+        console.error("Detailed error in getOrCreateConversation:", error);
+        console.error("Error Code:", error.code);
+        console.error("Error Message:", error.message);
+        throw error;
+    }
 }
 
 /** Subscribe to conversations the current user is part of */
