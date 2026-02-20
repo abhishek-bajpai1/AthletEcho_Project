@@ -144,8 +144,13 @@ function MessagesContent() {
     });
   }, [conversations, users, user?.uid, search]);
 
-  const activeConv = useMemo(() => convList.find((c) => c.id === activeConvId), [convList, activeConvId]);
-  const otherUser = activeConv?.other;
+  const activeConv = useMemo(() => conversations.find((c) => c.id === activeConvId), [conversations, activeConvId]);
+
+  const otherUser = useMemo(() => {
+    if (!activeConvId || !user?.uid) return null;
+    const otherUid = activeConvId.split("_").find((id) => id !== user.uid);
+    return users.find((u) => u.uid === otherUid);
+  }, [activeConvId, user?.uid, users]);
 
 
   // New chat user list: Only include accepted connections
