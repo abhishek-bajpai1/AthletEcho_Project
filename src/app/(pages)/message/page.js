@@ -52,6 +52,7 @@ function MessagesContent() {
   const [userSearch, setUserSearch] = useState("");     // Search to start new conv
   const [showNewChat, setShowNewChat] = useState(false);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isOpeningChat, setIsOpeningChat] = useState(false);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -85,13 +86,23 @@ function MessagesContent() {
 
   // ── Open or create conversation with a user ──────────────────────────────
   const openConversation = useCallback(async (otherUid) => {
-    if (!user?.uid) return;
-    const convId = await getOrCreateConversation(user.uid, otherUid);
-    setActiveConvId(convId);
-    setShowNewChat(false);
-    setUserSearch("");
-    setTimeout(() => inputRef.current?.focus(), 100);
-  }, [user?.uid]);
+    if (!user?.uid || isOpeningChat) return;
+    console.log("Opening conversation with:", otherUid);
+    setIsOpeningChat(true);
+    try {
+      const convId = await getOrCreateConversation(user.uid, otherUid);
+      console.log("Conversation ID obtained:", convId);
+      setActiveConvId(convId);
+      setShowNewChat(false);
+      setUserSearch("");
+      setTimeout(() => inputRef.current?.focus(), 100);
+    } catch (err) {
+      console.error("Error opening conversation:", err);
+      alert("Failed to open conversation. Please check your connection.");
+    } finally {
+      setIsOpeningChat(false);
+    }
+  }, [user?.uid, isOpeningChat]);
 
   // ── Handle Auto-opening chat from URL ──
   useEffect(() => {
@@ -124,9 +135,17 @@ function MessagesContent() {
   const handleSend = async () => {
     if (!input.trim() || !activeConvId || !user?.uid) return;
     const text = input;
-    setInput("");
-    setShowEmoji(false);
-    await sendMessage(activeConvId, user.uid, text);
+    console.log("Sending message to:", activeConvId);
+    try {
+      setInput("");
+      setShowEmoji(false);
+      await sendMessage(activeConvId, user.uid, text);
+      console.log("Message sent successfully");
+    } catch (err) {
+      console.error("Error sending message:", err);
+      setInput(text); // Restore input on failure
+      alert("Failed to send message. Please try again.");
+    }
   };
 
   // ── Helpers ──────────────────────────────────────────────────────────────
@@ -207,7 +226,8 @@ function MessagesContent() {
                   ) : (
                     filteredNewChatUsers.map((u) => (
                       <button key={u.uid} onClick={() => openConversation(u.uid)}
-                        className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--surface-elevated)] transition-colors text-left">
+                        disabled={isOpeningChat}
+                        className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-[var(--surface-elevated)] transition-colors text-left disabled:opacity-50">
                         {u.photoURL ? (
                           <img src={u.photoURL} alt={u.displayName}
                             className="w-9 h-9 rounded-full border border-[var(--primary)] object-cover" />
@@ -220,7 +240,11 @@ function MessagesContent() {
                           <p className="text-sm font-bold text-white">{u.displayName}</p>
                           <p className="text-xs text-[var(--text-muted)]">{u.email}</p>
                         </div>
-                        {u.online && <BsCircleFill className="ml-auto text-green-500 text-xs" />}
+                        {isOpeningChat ? (
+                          <div className="ml-auto w-4 h-4 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          u.online && <BsCircleFill className="ml-auto text-green-500 text-xs" />
+                        )}
                       </button>
                     ))
                   )}
