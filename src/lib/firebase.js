@@ -15,14 +15,22 @@ const firebaseConfig = {
 };
 
 // Initialise only once
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+let app;
+let auth;
+let db;
+let storage;
+let googleProvider;
 
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-const googleProvider = new GoogleAuthProvider();
-googleProvider.setCustomParameters({ prompt: "select_account" });
+if (firebaseConfig.apiKey) {
+  app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+  auth = getAuth(app);
+  db = getFirestore(app);
+  storage = getStorage(app);
+  googleProvider = new GoogleAuthProvider();
+  googleProvider.setCustomParameters({ prompt: "select_account" });
+} else {
+  console.warn("Firebase configuration is missing. This is expected during build time if env vars are not set.");
+}
 
 export { auth, db, storage, googleProvider };
 export default app;
