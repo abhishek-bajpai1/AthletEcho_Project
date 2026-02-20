@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -14,7 +15,7 @@ import {
 } from "@/lib/connections";
 import {
   MdSearch, MdPersonAdd, MdPersonRemove,
-  MdCheck, MdClose,
+  MdCheck, MdClose, MdSend,
 } from "react-icons/md";
 import { HiLightningBolt } from "react-icons/hi";
 import { GiTrophy } from "react-icons/gi";
@@ -24,7 +25,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const TABS = ["Suggestions", "My Connections", "Invitations"];
 
 // ── Person Card ────────────────────────────────────────────────────────────
-function PersonCard({ person, status, onConnect, onAccept, onIgnore, onRemove }) {
+function PersonCard({ person, status, onConnect, onAccept, onIgnore, onRemove, onMessage }) {
   const isSent = status === "sent";       // I sent a request, pending
   const isConnected = status === "accepted";
   const isIncoming = status === "incoming"; // They sent me a request
@@ -68,10 +69,16 @@ function PersonCard({ person, status, onConnect, onAccept, onIgnore, onRemove })
       {/* Actions */}
       <div className="flex gap-2 flex-shrink-0">
         {isConnected && (
-          <button onClick={() => onRemove(person.uid)}
-            className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-full border border-[var(--border)] text-[var(--text-muted)] hover:border-red-500 hover:text-red-500 transition-all">
-            <MdPersonRemove /> Remove
-          </button>
+          <>
+            <button onClick={() => onMessage(person.uid)}
+              className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-full bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] transition-all font-semibold">
+              <MdSend /> Message
+            </button>
+            <button onClick={() => onRemove(person.uid)}
+              className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-full border border-[var(--border)] text-[var(--text-muted)] hover:border-red-500 hover:text-red-500 transition-all">
+              <MdPersonRemove /> Remove
+            </button>
+          </>
         )}
         {isSent && (
           <button onClick={() => onIgnore(person.uid)}
@@ -105,6 +112,7 @@ function PersonCard({ person, status, onConnect, onAccept, onIgnore, onRemove })
 // ── Main Page ──────────────────────────────────────────────────────────────
 export default function ConnectionsPage() {
   const { user } = useAuth();
+  const router = useRouter();
   const [allUsers, setAllUsers] = useState([]);       // All other registered users
   const [myConns, setMyConns] = useState([]);         // My connection docs from Firestore
   const [activeTab, setActiveTab] = useState("Suggestions");
@@ -146,6 +154,10 @@ export default function ConnectionsPage() {
 
   const handleRemove = async (otherUid) => {
     await removeConnection(user.uid, otherUid);
+  };
+
+  const handleMessage = (otherUid) => {
+    router.push(`/message?uid=${otherUid}`);
   };
 
   // Filter helpers
@@ -274,6 +286,7 @@ export default function ConnectionsPage() {
                     onAccept={handleAccept}
                     onIgnore={handleIgnore}
                     onRemove={handleRemove}
+                    onMessage={handleMessage}
                   />
                 ))}
               </AnimatePresence>

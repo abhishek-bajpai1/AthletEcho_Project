@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, Suspense, useCallback } from "react";
+import { useSearchParams } from "next/navigation";
 import Footer from "../../components/footer";
 import Header from "../../components/header";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -15,6 +16,7 @@ import {
   sendMessage,
   markMessagesRead,
 } from "@/lib/chat";
+import { subscribeToMyConnections } from "@/lib/connections";
 import {
   MdSend, MdSearch, MdMoreVert, MdVideocam, MdPhone,
   MdEmojiEmotions, MdPersonAdd,
@@ -36,9 +38,11 @@ function getOtherUid(conv, myUid) {
   return conv.participants?.find((id) => id !== myUid) || null;
 }
 
-export default function MessagesPage() {
+function MessagesContent() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
   const [users, setUsers] = useState([]);               // All other users
+  const [myConns, setMyConns] = useState([]);         // My connections
   const [conversations, setConversations] = useState([]); // My conversations
   const [activeConvId, setActiveConvId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -47,27 +51,46 @@ export default function MessagesPage() {
   const [showEmoji, setShowEmoji] = useState(false);
   const [userSearch, setUserSearch] = useState("");     // Search to start new conv
   const [showNewChat, setShowNewChat] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
 
-  // ── Upsert profile + subscribe to users & conversations ─────────────────
+  // ── Upsert profile + subscribe to users, connections & conversations ──
   useEffect(() => {
     if (!user?.uid) return;
     upsertUserProfile(user);
 
-    // Subscribe to all other users (for starting new chats)
     const unsubUsers = subscribeToUsers(user.uid, setUsers);
-
-    // Subscribe to my conversations
     const unsubConvs = subscribeToConversations(user.uid, setConversations);
+    const unsubConnections = subscribeToMyConnections(user.uid, setMyConns);
 
-    // Mark offline on unmount
     return () => {
       unsubUsers();
       unsubConvs();
+      unsubConnections();
       setUserOffline(user.uid);
     };
   }, [user, user?.uid]);
+
+  // ── Connection Status Map ──
+  const statusMap = useMemo(() => {
+    const map = {};
+    myConns.forEach((conn) => {
+      if (conn.status === "accepted") {
+        map[conn.otherUid] = "accepted";
+      }
+    });
+    return map;
+  }, [myConns]);
+
+  // ── Handle Auto-opening chat from URL ──
+  useEffect(() => {
+    const uidFromUrl = searchParams.get("uid");
+    if (uidFromUrl && user?.uid && users.length > 0 && isInitialLoad) {
+      openConversation(uidFromUrl);
+      setIsInitialLoad(false);
+    }
+  }, [searchParams, user, users, isInitialLoad, openConversation]);
 
   // ── Subscribe to messages in active conversation ─────────────────────────
   useEffect(() => {
@@ -88,14 +111,14 @@ export default function MessagesPage() {
   }, [messages]);
 
   // ── Open or create conversation with a user ──────────────────────────────
-  const openConversation = async (otherUid) => {
+  const openConversation = useCallback(async (otherUid) => {
     if (!user?.uid) return;
     const convId = await getOrCreateConversation(user.uid, otherUid);
     setActiveConvId(convId);
     setShowNewChat(false);
     setUserSearch("");
     setTimeout(() => inputRef.current?.focus(), 100);
-  };
+  }, [user?.uid]);
 
   // ── Send ─────────────────────────────────────────────────────────────────
   const handleSend = async () => {
@@ -125,11 +148,15 @@ export default function MessagesPage() {
   const otherUser = activeConv?.other;
 
 
-  // New chat user list filtered by search
+  // New chat user list: Only include accepted connections
   const filteredNewChatUsers = useMemo(() => {
     const q = userSearch.toLowerCase();
-    return users.filter((u) => !q || u.displayName?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q));
-  }, [users, userSearch]);
+    return users.filter((u) => {
+      const isConnected = statusMap[u.uid] === "accepted";
+      const matchesSearch = !q || u.displayName?.toLowerCase().includes(q) || u.email?.toLowerCase().includes(q);
+      return isConnected && matchesSearch;
+    });
+  }, [users, statusMap, userSearch]);
 
   return (
     <ProtectedRoute>
@@ -394,5 +421,13 @@ export default function MessagesPage() {
         <Footer />
       </div>
     </ProtectedRoute>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[var(--background)] flex items-center justify-center text-white">Loading Messages...</div>}>
+      <MessagesContent />
+    </Suspense>
   );
 }
