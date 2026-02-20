@@ -297,27 +297,27 @@ function MessagesContent() {
                 <div className="px-5 py-3 border-b border-[var(--border)] flex items-center justify-between bg-[var(--surface-elevated)]">
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      {otherUser.photoURL ? (
+                      {otherUser?.photoURL ? (
                         <img src={otherUser.photoURL} alt={otherUser.displayName}
                           className="w-10 h-10 rounded-full border-2 border-[var(--primary)] object-cover" />
                       ) : (
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white font-bold border-2 border-[var(--primary)]">
-                          {otherUser.displayName?.[0] || "?"}
+                          {otherUser?.displayName?.[0] || "?"}
                         </div>
                       )}
-                      {otherUser.online && (
+                      {otherUser?.online && (
                         <BsCircleFill className="absolute -bottom-0.5 -right-0.5 text-green-500 text-[10px]" />
                       )}
                     </div>
                     <div>
                       <p className="font-bold text-white text-sm" style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
-                        {otherUser.displayName}
+                        {otherUser?.displayName || "Loading..."}
                       </p>
                       <p className="text-xs">
-                        {otherUser.online
+                        {otherUser?.online
                           ? <span className="text-green-500">● Online</span>
                           : <span className="text-[var(--text-muted)]">
-                            Last seen {otherUser.lastSeen ? formatTime(otherUser.lastSeen) : "recently"}
+                            Last seen {otherUser?.lastSeen ? formatTime(otherUser.lastSeen) : "recently"}
                           </span>}
                       </p>
                     </div>
@@ -340,7 +340,7 @@ function MessagesContent() {
                   {messages.length === 0 && (
                     <div className="flex flex-col items-center justify-center h-full text-[var(--text-muted)]">
                       <HiLightningBolt className="text-4xl text-[var(--primary)] opacity-50 mb-2" />
-                      <p className="text-sm">Say hello to <strong className="text-white">{otherUser.displayName}</strong>!</p>
+                      <p className="text-sm">Say hello to <strong className="text-white">{otherUser?.displayName || "your contact"}</strong>!</p>
                     </div>
                   )}
                   {messages.map((msg) => {
@@ -350,11 +350,11 @@ function MessagesContent() {
                         initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.15 }}
                         className={`flex items-end gap-2.5 ${isMe ? "flex-row-reverse" : "flex-row"}`}>
                         {!isMe && (
-                          otherUser.photoURL ? (
+                          otherUser?.photoURL ? (
                             <img src={otherUser.photoURL} alt="" className="w-8 h-8 rounded-full border border-[var(--primary)] flex-shrink-0 self-end object-cover" />
                           ) : (
                             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--primary)] to-[var(--primary-dark)] flex items-center justify-center text-white text-xs font-bold flex-shrink-0 self-end">
-                              {otherUser.displayName?.[0] || "?"}
+                              {otherUser?.displayName?.[0] || "?"}
                             </div>
                           )
                         )}
